@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hello, Hackathon!</title></head>
+<body>
+<h1>Hello, Hackathon!</h1>
+<p id="team"></p>
+<button id="check" type="button">Check Backend Connection</button>
+<p id="result" role="status">Not checked yet.</p>
+<script>
+const teamId = 'Tech Titans';
+document.getElementById('team').textContent = 'Team: ' + teamId;
+document.getElementById('check').addEventListener('click', async () => {
+ const output = document.getElementById('result'); output.textContent = 'Checking...';
+ try {
+  const response = await fetch('/api/health');
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  const data = await response.json();
+  if (data.status !== 'ok' || data.teamId !== teamId) throw new Error('Wrong backend response');
+  output.textContent = data.message + ' Team: ' + data.teamId;
+ } catch (error) { output.textContent = 'Failed: ' + error.message; }
+});
+</script>
+</body>
+</html>
